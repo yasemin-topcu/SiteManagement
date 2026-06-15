@@ -1,0 +1,16 @@
+@model SiteManagement.Domain.Entities.Building
+@{
+    ViewData["Title"] = "Apartman Detay";
+}
+
+<div class="container py-4" style="max-width:720px;">
+    <h2 class="mb-2">@Model.Name</h2>
+
+    <div class="alert alert-success">
+        <div class="fw-bold">Apartman Katılım Kodu (JoinCode):</div>
+        <div class="fs-3">@Model.JoinCode</div>
+        <div class="text-muted">Bu kodu daire sakinlerine vererek kayıt olmalarını sağlayabilirsiniz.</div>
+    </div>
+
+    <a class="btn btn-outline-primary" asp-controller="Home" asp-action="Index">Ana Sayfa</a>
+</div>

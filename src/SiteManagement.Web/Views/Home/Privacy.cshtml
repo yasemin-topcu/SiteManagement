@@ -1,0 +1,55 @@
+﻿@{
+    ViewData["Title"] = "Gizlilik Politikası";
+}
+
+<div class="container mt-4">
+    <h1 class="mb-4">@ViewData["Title"]</h1>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h4>1. Toplanan Veriler</h4>
+            <p>
+                Site Yönetimi uygulaması kapsamında kullanıcı adı, e-posta adresi,
+                apartman/daire bilgileri ve sistem kullanım kayıtları toplanabilir.
+                Bu veriler yalnızca sistemin işleyişi için kullanılmaktadır.
+            </p>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h4>2. Verilerin Kullanım Amacı</h4>
+            <ul>
+                <li>Kullanıcı kimlik doğrulama işlemleri</li>
+                <li>Aidat ve ödeme takibi</li>
+                <li>Duyuru ve bildirim gönderimi</li>
+                <li>Sistem güvenliğinin sağlanması</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h4>3. Veri Güvenliği</h4>
+            <p>
+                Kullanıcı verileri güvenli sunucularda saklanır.
+                Şifreler hash algoritmaları ile korunmaktadır.
+                Yetkisiz erişime karşı gerekli teknik ve idari önlemler alınmaktadır.
+            </p>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h4>4. KVKK ve Yasal Haklar</h4>
+            <p>
+                6698 sayılı Kişisel Verilerin Korunması Kanunu (KVKK) kapsamında
+                kullanıcılar, kişisel verilerine erişme, düzeltme ve silme hakkına sahiptir.
+            </p>
+        </div>
+    </div>
+
+    <div class="alert alert-info mt-4">
+        Son Güncelleme Tarihi: @DateTime.Now.ToString("dd.MM.yyyy")
+    </div>
+</div>

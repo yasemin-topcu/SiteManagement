@@ -1,0 +1,39 @@
+@model IEnumerable<dynamic>
+@{
+    ViewData["Title"] = "Ödeme Durumu";
+}
+
+<div class="container py-4" style="max-width: 900px;">
+    <h2 class="mb-1">Ödeme Durumu</h2>
+    <div class="text-muted mb-3">
+        <strong>@ViewBag.FeeTitle</strong> — @ViewBag.Amount TL — Son: @(((DateTime)ViewBag.DueDate).ToShortDateString())
+    </div>
+
+    <table class="table table-striped align-middle">
+        <thead>
+            <tr>
+                <th>Ad Soyad</th>
+                <th>E-posta</th>
+                <th>Durum</th>
+                <th>Ödeme Zamanı</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var r in Model)
+        {
+            bool isPaid = r.IsPaid;
+            <tr>
+                <td>@r.FullName</td>
+                <td>@r.Email</td>
+                <td>
+                    @if (isPaid) { <span class="badge bg-success">Ödedi</span> }
+                    else { <span class="badge bg-danger">Ödemedi</span> }
+                </td>
+                <td>@(r.PaidAt != null ? ((DateTime)r.PaidAt).ToLocalTime().ToString("g") : "-")</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+
+    <a class="btn btn-link" asp-action="Index">Aidatlara geri</a>
+</div>

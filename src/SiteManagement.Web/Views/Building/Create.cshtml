@@ -1,0 +1,24 @@
+@model SiteManagement.Web.ViewModels.CreateBuildingVm
+@{
+    ViewData["Title"] = "Apartman Oluştur";
+}
+
+<div class="container py-4" style="max-width:720px;">
+    <h2 class="mb-3">Apartman Oluştur</h2>
+
+    <form asp-action="Create" method="post">
+        @Html.AntiForgeryToken()
+
+        <div class="mb-3">
+            <label class="form-label">Apartman Adı</label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <button class="btn btn-primary" type="submit">Oluştur</button>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

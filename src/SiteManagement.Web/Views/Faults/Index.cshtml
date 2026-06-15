@@ -1,0 +1,60 @@
+@model List<SiteManagement.Domain.Entities.FaultReport>
+@{
+    ViewData["Title"] = "Arızalar";
+}
+
+<div class="container py-4" style="max-width: 950px;">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Arıza Bildirimleri</h2>
+        <a class="btn btn-primary" asp-action="Create">Arıza Bildir</a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">Henüz arıza kaydı yok.</div>
+    }
+    else
+    {
+        <table class="table table-striped align-middle">
+            <thead>
+                <tr>
+                    <th>Başlık</th>
+                    <th>Açıklama</th>
+                    <th>Durum</th>
+                    <th>Oluşturulma</th>
+                    <th class="text-end">İşlem</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var f in Model)
+            {
+                <tr>
+                    <td>@f.Title</td>
+                    <td>@f.Description</td>
+                    <td>
+                        @if (f.IsResolved)
+                        {
+                            <span class="badge bg-success">Tamir Edildi</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-warning text-dark">Bekliyor</span>
+                        }
+                    </td>
+                    <td>@f.CreatedAt.ToLocalTime().ToString("g")</td>
+                    <td class="text-end">
+                        @if (User.IsInRole("Manager") && !f.IsResolved)
+                        {
+                            <form asp-action="MarkResolved" method="post" class="d-inline">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@f.Id" />
+                                <button class="btn btn-success btn-sm" type="submit">Tamir Edildi</button>
+                            </form>
+                        }
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+</div>

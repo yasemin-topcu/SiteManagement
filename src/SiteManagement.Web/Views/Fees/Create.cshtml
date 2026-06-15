@@ -1,0 +1,74 @@
+@model SiteManagement.Web.ViewModels.FeeCreateVm
+@{
+    ViewData["Title"] = "Aidat Ekle";
+}
+
+<div class="container py-4" style="max-width: 720px;">
+    <h2 class="mb-3">Aidat Ekle</h2>
+
+    <form asp-action="Create" method="post">
+        @Html.AntiForgeryToken()
+
+        <div class="mb-3">
+            <label class="form-label">Başlık</label>
+            <input asp-for="Title" class="form-control" />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Tutar</label>
+            <input asp-for="Amount" class="form-control" />
+            <span asp-validation-for="Amount" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Son Ödeme Tarihi</label>
+            <input asp-for="DueDate" type="date" class="form-control" />
+            <span asp-validation-for="DueDate" class="text-danger"></span>
+        </div>
+
+        <!-- YENİ EKLENEN ALANLAR -->
+
+        <div class="mb-3">
+            <label class="form-label">Aidat Türü</label>
+            <select asp-for="FeeType" class="form-select" id="feeType">
+                <option value="Normal">Normal Aidat</option>
+                <option value="Late">Gecikmeli Aidat (Faizli)</option>
+                <option value="Special">Özel Aidat (Tek Seferlik)</option>
+            </select>
+        </div>
+
+        <div class="mb-3" id="penaltyBox">
+            <label class="form-label">Gecikme Oranı (0.10 = %10)</label>
+            <input asp-for="PenaltyRate" class="form-control" />
+            <span asp-validation-for="PenaltyRate" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3" id="noteBox">
+            <label class="form-label">Açıklama (Özel aidat için)</label>
+            <input asp-for="Note" class="form-control" />
+            <span asp-validation-for="Note" class="text-danger"></span>
+        </div>
+
+        <button class="btn btn-primary" type="submit">Kaydet</button>
+        <a class="btn btn-link" asp-action="Index">Geri</a>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        const feeType = document.getElementById('feeType');
+        const penaltyBox = document.getElementById('penaltyBox');
+        const noteBox = document.getElementById('noteBox');
+
+        function toggle() {
+            penaltyBox.style.display = (feeType.value === 'Late') ? 'block' : 'none';
+            noteBox.style.display = (feeType.value === 'Special') ? 'block' : 'none';
+        }
+
+        feeType.addEventListener('change', toggle);
+        toggle();
+    </script>
+}

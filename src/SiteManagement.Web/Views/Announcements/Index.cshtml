@@ -1,0 +1,32 @@
+@model List<SiteManagement.Domain.Entities.Announcement>
+@{
+    ViewData["Title"] = "Duyurular";
+}
+
+<div class="container py-4" style="max-width: 900px;">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Duyurular</h2>
+        @if (User.IsInRole("Manager"))
+        {
+            <a class="btn btn-primary" asp-action="Create">Duyuru Ekle</a>
+        }
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">Henüz duyuru yok.</div>
+    }
+    else
+    {
+        foreach (var a in Model)
+        {
+            <div class="card shadow-sm mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">@a.Title</h5>
+                    <div class="text-muted mb-2">@a.CreatedAt.ToLocalTime()</div>
+                    <p class="card-text">@a.Content</p>
+                </div>
+            </div>
+        }
+    }
+</div>

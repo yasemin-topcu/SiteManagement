@@ -1,0 +1,109 @@
+@model List<SiteManagement.Domain.Entities.Fee>
+@using SiteManagement.Domain.Entities
+
+@{
+    ViewData["Title"] = "Aidatlar";
+    var map = ViewBag.PaymentMap as Dictionary<int, FeePayment> ?? new();
+}
+
+<div class="container py-4" style="max-width: 900px;">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Aidatlar</h2>
+        @if (User.IsInRole("Manager"))
+        {
+            <a class="btn btn-primary" asp-action="Create">Aidat Ekle</a>
+        }
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">Henüz aidat yok.</div>
+    }
+    else
+    {
+        <table class="table table-striped align-middle">
+            <thead>
+                <tr>
+                    <th>Başlık</th>
+                    <th>Tutar</th>
+                    <th>Son Ödeme</th>
+                    <th>Durum</th>
+                    <th class="text-end">İşlem</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var f in Model)
+            {
+                map.TryGetValue(f.Id, out var p);
+                var paid = p?.IsPaid ?? false;
+
+                <tr>
+                    <!-- BAŞLIK + NOTE + GECİKME ORANI -->
+                    <td>
+                        <div class="fw-semibold">@f.Title</div>
+
+                        @if (f is SpecialFee sf && !string.IsNullOrWhiteSpace(sf.Note))
+                        {
+                            <div class="text-muted small">
+                                Açıklama: @sf.Note
+                            </div>
+                        }
+
+                        @if (f is LateFee lf)
+                        {
+                            <div class="text-muted small">
+                                Gecikme oranı: @(lf.PenaltyRate * 100) %
+                            </div>
+                        }
+                    </td>
+
+                    <!-- HESAPLANAN TUTAR + TÜR + BASE -->
+                    <td>
+                        <div class="fw-semibold">
+                            @f.CalculateAmount().ToString("0.00") TL
+                        </div>
+                        <div class="text-muted small">
+                            @f.GetType().Name • Base: @f.BaseAmount.ToString("0.00") TL
+                        </div>
+                    </td>
+
+                    <td>@f.DueDate.ToShortDateString()</td>
+
+                    <td>
+                        @if (User.IsInRole("Resident"))
+                        {
+                            if (paid)
+                            {
+                                <span class="badge bg-success">Ödendi</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-warning text-dark">Ödenmedi</span>
+                            }
+                        }
+                        else
+                        {
+                            <span class="text-muted">Yönetici</span>
+                        }
+                    </td>
+
+                    <td class="text-end">
+                        @if (User.IsInRole("Resident"))
+                        {
+                            if (!paid)
+                            {
+                                <a class="btn btn-success btn-sm" asp-action="Pay" asp-route-feeId="@f.Id">Öde</a>
+                            }
+                        }
+
+                        @if (User.IsInRole("Manager"))
+                        {
+                            <a class="btn btn-outline-secondary btn-sm" asp-action="Status" asp-route-feeId="@f.Id">Ödeme Durumu</a>
+                        }
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+</div>

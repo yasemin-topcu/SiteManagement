@@ -1,0 +1,76 @@
+@model SiteManagement.Web.ViewModels.RegisterVm
+@{
+    ViewData["Title"] = "Kaydol";
+}
+
+<div class="container py-4" style="max-width: 720px;">
+    <h2 class="mb-3">Kaydol</h2>
+
+    <form asp-action="Register" method="post">
+        @Html.AntiForgeryToken()
+
+        <div class="mb-3">
+            <label class="form-label">Ad Soyad</label>
+            <input asp-for="FullName" class="form-control" />
+            <span asp-validation-for="FullName" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">E-posta</label>
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Telefon</label>
+            <input asp-for="PhoneNumber" class="form-control" />
+            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Kayıt Tipi</label>
+            <select asp-for="UserType" class="form-select" id="userType">
+                <option value="Resident">Daire Sakini</option>
+                <option value="Manager">Yönetici</option>
+            </select>
+            <span asp-validation-for="UserType" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3" id="joinCodeBox">
+            <label class="form-label">Apartman Katılım Kodu (Daire sakini için)</label>
+            <input asp-for="JoinCode" class="form-control" />
+            <span asp-validation-for="JoinCode" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Şifre</label>
+            <input asp-for="Password" class="form-control" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Şifre (Tekrar)</label>
+            <input asp-for="ConfirmPassword" class="form-control" />
+            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+        </div>
+
+        <div asp-validation-summary="All" class="text-danger mb-2"></div>
+
+        <button class="btn btn-primary" type="submit">Kaydol</button>
+        <a class="btn btn-link" asp-action="Login">Zaten hesabın var mı? Giriş yap</a>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        const userType = document.getElementById('userType');
+        const joinCodeBox = document.getElementById('joinCodeBox');
+
+        function toggleJoinCode() {
+            joinCodeBox.style.display = (userType.value === 'Resident') ? 'block' : 'none';
+        }
+        userType.addEventListener('change', toggleJoinCode);
+        toggleJoinCode();
+    </script>
+}

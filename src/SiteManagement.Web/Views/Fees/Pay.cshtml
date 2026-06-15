@@ -1,0 +1,58 @@
+@model SiteManagement.Web.ViewModels.PayFeeVm
+@{
+    ViewData["Title"] = "Aidat Ödeme";
+}
+
+<div class="container py-4" style="max-width:720px;">
+    <h2 class="mb-2">Aidat Ödeme</h2>
+
+    <div class="alert alert-info">
+        <div><strong>@ViewBag.FeeTitle</strong></div>
+        <div>Tutar: <strong>@ViewBag.Amount TL</strong></div>
+        @if (ViewBag.Note != null)
+        {
+            <div class="mt-2 text-muted">Açıklama: @ViewBag.Note</div>
+        }
+        <div>Son ödeme: @(((DateTime)ViewBag.DueDate).ToShortDateString())</div>
+        <div class="text-muted mt-2">Demo mod: kart doğrulaması yapılmaz, form doldurulunca ödeme başarılı sayılır.</div>
+    </div>
+
+    <form asp-action="Pay" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="FeeId" />
+
+        <div class="mb-3">
+            <label class="form-label">Kart Üzerindeki İsim</label>
+            <input asp-for="CardHolderName" class="form-control" />
+            <span asp-validation-for="CardHolderName" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Kart Numarası</label>
+            <input asp-for="CardNumber" class="form-control" placeholder="XXXX XXXX XXXX XXXX" />
+            <span asp-validation-for="CardNumber" class="text-danger"></span>
+        </div>
+
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label class="form-label">Son Kullanma (AA/YY)</label>
+                <input asp-for="Expiry" class="form-control" placeholder="03/28" />
+                <span asp-validation-for="Expiry" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">CVV</label>
+                <input asp-for="Cvv" class="form-control" placeholder="123" />
+                <span asp-validation-for="Cvv" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="mt-3">
+            <button class="btn btn-success" type="submit">Ödemeyi Tamamla</button>
+            <a class="btn btn-link" asp-action="Index">İptal</a>
+        </div>
+
+        <div asp-validation-summary="All" class="text-danger mt-2"></div>
+    </form>
+</div>
+
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

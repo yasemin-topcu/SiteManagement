@@ -1,0 +1,213 @@
+@model SiteManagement.Web.ViewModels.DashboardVm
+@{
+    ViewData["Title"] = "Panel";
+}
+
+<div class="container py-4" style="max-width: 900px;">
+    <h2 class="mb-1 text-center">Apartman Paneli</h2>
+    <div class="text-muted mb-4 text-center">
+        Aktif apartman: <strong>@Model.BuildingName</strong>
+    </div>
+
+    <div class="row g-3 mb-3">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Katılım Kodu</h5>
+                    <div class="fs-3 fw-bold">@Model.JoinCode</div>
+                    <div class="text-muted">Daire sakinleri bu kodla kayıt olur.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Özet</h5>
+                    <div class="d-flex gap-4 flex-wrap">
+                        <div>
+                            <div class="text-muted">Toplam Duyuru</div>
+                            <div class="fs-4 fw-bold">@Model.TotalAnnouncementsCount</div>
+                        </div>
+                        <div>
+                            <div class="text-muted">Toplam Aidat</div>
+                            <div class="fs-4 fw-bold">@Model.TotalFeesCount</div>
+                        </div>
+                        <div>
+                            <div class="text-muted">Açık Arıza</div>
+                            <div class="fs-4 fw-bold">@Model.UnresolvedFaultCount</div>
+                        </div>
+                    </div>
+
+                    <div class="mt-3">
+                        <a class="btn btn-outline-primary btn-sm" asp-controller="Announcements" asp-action="Index">Duyurular</a>
+                        <a class="btn btn-outline-primary btn-sm" asp-controller="Fees" asp-action="Index">Aidatlar</a>
+                        <a class="btn btn-outline-primary btn-sm" asp-controller="Faults" asp-action="Index">Arızalar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BİLDİRİMLER -->
+    <div class="row g-3">
+        <!-- Son Duyurular -->
+        <div class="col-md-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">Son Duyurular</h5>
+                        @if (User.IsInRole("Manager"))
+                        {
+                            <a class="btn btn-sm btn-primary" asp-controller="Announcements" asp-action="Create">Duyuru Ekle</a>
+                        }
+                    </div>
+
+                    <hr />
+
+                    @if (!Model.LatestAnnouncements.Any())
+                    {
+                        <div class="text-muted">Henüz duyuru yok.</div>
+                    }
+                    else
+                    {
+                        <ul class="list-group list-group-flush">
+                            @foreach (var a in Model.LatestAnnouncements)
+                            {
+                                <li class="list-group-item px-0">
+                                    <div class="fw-semibold">@a.Title</div>
+                                    <div class="text-muted small">@a.CreatedAt.ToLocalTime().ToString("g")</div>
+                                </li>
+                            }
+                        </ul>
+
+                        <div class="mt-2">
+                            <a asp-controller="Announcements" asp-action="Index">Tüm duyuruları gör →</a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Aidat Bildirimleri -->
+        <div class="col-md-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">Aidat Bildirimleri</h5>
+                        @if (User.IsInRole("Manager"))
+                        {
+                            <a class="btn btn-sm btn-primary" asp-controller="Fees" asp-action="Create">Aidat Ekle</a>
+                        }
+                    </div>
+
+                    <hr />
+
+                    @if (User.IsInRole("Resident"))
+                    {
+                        if (!Model.UnpaidFees.Any())
+                        {
+                            <div class="alert alert-success mb-0">Ödenmemiş aidatın yok 🎉</div>
+                        }
+                        else
+                        {
+                            <div class="alert alert-warning">
+                                <strong>@Model.UnpaidFees.Count</strong> adet ödenmemiş aidatın var.
+                            </div>
+
+                            <ul class="list-group list-group-flush">
+                                @foreach (var f in Model.UnpaidFees)
+                                {
+                                    <li class="list-group-item px-0 d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <div class="fw-semibold">@f.Title</div>
+                                            <div class="text-muted small">
+                                                @f.Amount.ToString("0.00") TL • Son: @f.DueDate.ToShortDateString()
+                                            </div>
+                                        </div>
+                                        <a class="btn btn-success btn-sm" asp-controller="Fees" asp-action="Pay" asp-route-feeId="@f.FeeId">Öde</a>
+                                    </li>
+                                }
+                            </ul>
+
+                            <div class="mt-2">
+                                <a asp-controller="Fees" asp-action="Index">Tüm aidatları gör →</a>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="text-muted">
+                            Yönetici olarak aidat ekleyebilir ve ödeme durumlarını “Aidatlar” sayfasından takip edebilirsin.
+                        </div>
+                        <div class="mt-2">
+                            <a asp-controller="Fees" asp-action="Index">Aidatları yönet →</a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ARIZA BÖLÜMÜ -->
+    <div class="row g-3 mt-1">
+        <div class="col-md-12">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">Arıza Bildirimleri</h5>
+                        <a class="btn btn-sm btn-primary" asp-controller="Faults" asp-action="Create">Arıza Bildir</a>
+                    </div>
+
+                    <hr />
+
+                    @if (Model.UnresolvedFaultCount > 0)
+                    {
+                        <div class="alert alert-warning">
+                            Çözülmemiş <strong>@Model.UnresolvedFaultCount</strong> arıza kaydı bulunuyor.
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-success">
+                            Şu anda çözülmemiş arıza kaydı yok.
+                        </div>
+                    }
+
+                    @if (!Model.LatestFaults.Any())
+                    {
+                        <div class="text-muted">Henüz arıza bildirimi yok.</div>
+                    }
+                    else
+                    {
+                        <ul class="list-group list-group-flush">
+                            @foreach (var fault in Model.LatestFaults)
+                            {
+                                <li class="list-group-item px-0 d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <div class="fw-semibold">@fault.Title</div>
+                                        <div class="text-muted small">@fault.CreatedAt.ToLocalTime().ToString("g")</div>
+                                    </div>
+                                    <div>
+                                        @if (fault.IsResolved)
+                                        {
+                                            <span class="badge bg-success">Tamir Edildi</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-warning text-dark">Bekliyor</span>
+                                        }
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+
+                        <div class="mt-2">
+                            <a asp-controller="Faults" asp-action="Index">Tüm arızaları gör →</a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
