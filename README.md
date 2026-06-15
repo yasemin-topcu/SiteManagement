@@ -34,27 +34,27 @@ Proje, bağımlılıkları en aza indirmek ve sürdürülebilirliği artırmak a
 
 ### 🔐 Giriş Ekranı (Login)
 Sisteme ilk giriş yapıldığında kullanıcıları karşılayan ekran:
-![Giriş Ekranı](src/images/ilk_giris.png)
+![Giriş Ekranı](images/ilkGiris.png)
 
 ### 📝 Kayıt Olma Ekranı (Register)
 Sakinlerin sisteme kayıt olabileceği alan:
-![Kayıt Olma Ekranı](src/images/kaydol.png)
+![Kayıt Olma Ekranı](images/kaydol.png)
 
 ### 🏠 Giriş Sonrası Ana Sayfa (Dashboard)
 Giriş yapıldıktan sonra sitenin genel durumunu gösteren özet panel:
-![Ana Sayfa](src/images/anaSayfa.png)
+![Ana Sayfa](images/anaSayfa.png)
 
 ### 📢 Duyurular Sayfası
 Yönetim tarafından paylaşılan güncel duyuruların listelendiği ekran:
-![Duyurular](src/images/duyurular.png)
+![Duyurular](images/duyurular.png)
 
 ### 💳 Aidat Takip Sayfası
 Sakinlerin geçmiş ve güncel aidat borçlarını görüp takip edebileceği ve ödeyebileceği ekran:
-![Aidat Takibi](src/images/aidatlar.png)
+![Aidat Takibi](images/aidatlar.png)
 
 ### ⚠️ Arıza Bildirim Sayfası
 Sitedeki teknik veya genel problemlerin yönetime raporlandığı ekran:
-![Arıza Bildirimi](src/images/arizabidir.png)
+![Arıza Bildirimi](images/arizaBildir.png)
 
 ---
 
